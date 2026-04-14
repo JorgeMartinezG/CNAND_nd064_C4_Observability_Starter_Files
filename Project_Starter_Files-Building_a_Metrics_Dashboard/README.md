@@ -7,11 +7,21 @@
 ## Setup the Jaeger and Prometheus source
 *TODO:* Expose Grafana to the internet and then setup Prometheus as a data source. Provide a screenshot of the home page after logging into Grafana.
 
+Grafana was exposed using kubectl port-forward on port 3000. After logging into Grafana, Prometheus was configured as a data source using the Prometheus service running in the monitoring namespace. The data source configuration was validated successfully.
+
 ## Create a Basic Dashboard
 *TODO:* Create a dashboard in Grafana that shows Prometheus as a source. Take a screenshot and include it here.
 
+A basic Grafana dashboard was created using Prometheus as a data source. The dashboard includes a simple panel querying Prometheus metrics to verify that data is being collected correctly.
+
 ## Describe SLO/SLI
 *TODO:* Describe, in your own words, what the SLIs are, based on an SLO of *monthly uptime* and *request response time*.
+
+An SLO (Service Level Objective) defines the target level of reliability or performance that a service should achieve. An SLI (Service Level Indicator) is the actual metric used to measure whether the service is meeting that objective.
+
+For a monthly uptime SLO, the SLI would be the percentage of time that the application is available and responding correctly during the month.
+
+For request response time, the SLI would be the measured latency of requests (for example p95 or p99 response time), which represents the user experience when interacting with the application.
 
 ## Creating SLI metrics.
 *TODO:* It is important to know why we want to measure certain metrics for our customer. Describe in detail 5 metrics to measure these SLIs. 
