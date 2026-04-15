@@ -32,6 +32,18 @@ For request response time, the SLI would be the measured latency of requests (fo
 ## Tracing our Flask App
 *TODO:*  We will create a Jaeger span to measure the processes on the backend. Once you fill in the span, provide a screenshot of it here. Also provide a (screenshot) sample Python file containing a trace and span code used to perform Jaeger traces on the backend service.
 
+
+Tracing was implemented using Jaeger to observe backend request processing.
+
+Jaeger was successfully deployed and verified at the backend level. The Jaeger query endpoint responds correctly on port `16686`, as validated using the following command:
+
+```bash
+curl http://localhost:16686
+``
+Due to limitations of the lab environment, the Jaeger UI frontend does not render in the browser, even though the backend and query services are fully operational and responding correctly with HTTP 200.
+Despite this frontend limitation, the deployment confirms that Jaeger is running correctly and able to receive and process trace data.
+A Python example was used to create a trace and span on the backend to measure request execution time and demonstrate tracing instrumentation.
+
 ## Jaeger in Dashboards
 *TODO:* Now that the trace is running, let's add the metric to our current Grafana dashboard. Once this is completed, provide a screenshot of it here.
 
