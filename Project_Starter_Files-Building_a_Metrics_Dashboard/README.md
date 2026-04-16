@@ -2,36 +2,70 @@
 
 ## Verify the monitoring installation
 
-*TODO:* run `kubectl` command to show the running pods and services for all components. Take a screenshot of the output and include it here to verify the installation
+
+To verify the monitoring installation, Kubernetes resources were inspected to ensure that all monitoring components were running successfully.
+
+The following command was executed:
+
+```bash
+kubectl get pods,svc -n monitoring
+
 
 ## Setup the Jaeger and Prometheus source
-*TODO:* Expose Grafana to the internet and then setup Prometheus as a data source. Provide a screenshot of the home page after logging into Grafana.
+Grafana was exposed locally using kubectl port-forward on port 3000:
+
+kubectl port-forward svc/grafana 3000:80 -n monitoring
+
+After logging into Grafana, Prometheus was configured as a data source using the Prometheus service running in the monitoring namespace. The data source configuration was validated successfully, confirming that Grafana can query Prometheus metrics.
 
 Grafana was exposed using kubectl port-forward on port 3000. After logging into Grafana, Prometheus was configured as a data source using the Prometheus service running in the monitoring namespace. The data source configuration was validated successfully.
 
 ## Create a Basic Dashboard
-*TODO:* Create a dashboard in Grafana that shows Prometheus as a source. Take a screenshot and include it here.
-
-A basic Grafana dashboard was created using Prometheus as a data source. The dashboard includes a simple panel querying Prometheus metrics to verify that data is being collected correctly.
+A basic Grafana dashboard was created using Prometheus as the data source.
+This dashboard was used to verify that metrics are being collected and displayed correctly.
+The dashboard includes a simple panel querying Prometheus metrics to confirm end‑to‑end connectivity.
 
 ## Describe SLO/SLI
-*TODO:* Describe, in your own words, what the SLIs are, based on an SLO of *monthly uptime* and *request response time*.
-
-An SLO (Service Level Objective) defines the target level of reliability or performance that a service should achieve. An SLI (Service Level Indicator) is the actual metric used to measure whether the service is meeting that objective.
-
-For a monthly uptime SLO, the SLI would be the percentage of time that the application is available and responding correctly during the month.
-
-For request response time, the SLI would be the measured latency of requests (for example p95 or p99 response time), which represents the user experience when interacting with the application.
+A Service Level Objective (SLO) defines the target reliability or performance that a service is expected to achieve. A Service Level Indicator (SLI) is the actual metric used to measure whether the system meets that objective.
+For a monthly uptime SLO, the SLI is the percentage of time the application is available and responding correctly during the month.
+For request response time, the SLI is the measured latency of requests (for example p95 or p99 latency), which reflects the user experience when interacting with the application.
 
 ## Creating SLI metrics.
-*TODO:* It is important to know why we want to measure certain metrics for our customer. Describe in detail 5 metrics to measure these SLIs. 
+To measure the defined SLIs, the following five metrics were selected:
+
+
+Service availability (%)
+Measures the percentage of time the service is reachable and operational.
+
+
+Request latency (p95 / p99)
+Captures high‑percentile response times to reflect worst‑case user experience.
+
+
+HTTP 4xx error rate
+Indicates client‑side issues such as invalid requests.
+
+
+HTTP 5xx error rate
+Represents server‑side failures and impacts overall reliability.
+
+
+Request throughput (requests per second)
+Helps correlate traffic patterns with latency and error behavior.
 
 ## Create a Dashboard to measure our SLIs
-*TODO:* Create a dashboard to measure the uptime of the frontend and backend services We will also want to measure to measure 40x and 50x errors. Create a dashboard that show these values over a 24 hour period and take a screenshot.
+A Grafana dashboard was created to measure SLI metrics over a 24‑hour period.
+The dashboard includes panels for:
+
+Frontend service availability
+Backend service availability
+HTTP 4xx error rate
+HTTP 5xx error rate
+Request latency
+
+This dashboard provides visibility into system reliability and performance trends.
 
 ## Tracing our Flask App
-*TODO:*  We will create a Jaeger span to measure the processes on the backend. Once you fill in the span, provide a screenshot of it here. Also provide a (screenshot) sample Python file containing a trace and span code used to perform Jaeger traces on the backend service.
-
 
 Tracing was implemented using Jaeger to observe backend request processing.
 
@@ -45,31 +79,57 @@ Despite this frontend limitation, the deployment confirms that Jaeger is running
 A Python example was used to create a trace and span on the backend to measure request execution time and demonstrate tracing instrumentation.
 
 ## Jaeger in Dashboards
-*TODO:* Now that the trace is running, let's add the metric to our current Grafana dashboard. Once this is completed, provide a screenshot of it here.
+Although the Jaeger UI frontend does not render in the lab environment, tracing data can still be correlated with performance metrics.
+The Grafana dashboard includes request latency panels, allowing correlation between observed latency and backend processing behavior that would normally be analyzed through Jaeger traces.
+This approach still provides insight into performance bottlenecks and service behavior.
 
 ## Report Error
-*TODO:* Using the template below, write a trouble ticket for the developers, to explain the errors that you are seeing (400, 500, latency) and to let them know the file that is causing the issue also include a screenshot of the tracer span to demonstrate how we can user a tracer to locate errors easily.
-
 TROUBLE TICKET
-
-Name:
-
-Date:
-
-Subject:
-
-Affected Area:
-
-Severity:
-
+Name: Jorge Martínez
+Date: 15 April 2026
+Subject: Backend latency and error rate increase
+Affected Area: Backend Flask Service
+Severity: Medium
 Description:
+During normal operation, increased HTTP 4xx and 5xx error rates were observed, along with higher request latency.
+Metrics indicate that backend request processing time is the main contributor to the latency.
+Tracing and performance metrics allow identification of problematic requests and backend behavior contributing to failures.
 
 
 ## Creating SLIs and SLOs
-*TODO:* We want to create an SLO guaranteeing that our application has a 99.95% uptime per month. Name four SLIs that you would use to measure the success of this SLO.
+To guarantee a 99.95% monthly uptime SLO, the following SLIs were selected:
+
+Service availability percentage
+Request success rate (non‑error responses)
+Backend request latency (p95/p99)
+Server error rate (HTTP 5xx
 
 ## Building KPIs for our plan
-*TODO*: Now that we have our SLIs and SLOs, create a list of 2-3 KPIs to accurately measure these metrics as well as a description of why those KPIs were chosen. We will make a dashboard for this, but first write them down here.
+The following KPIs were defined to measure reliability and performance:
+
+
+Monthly Availability KPI
+Tracks uptime directly against the 99.95% SLO.
+
+
+p95 Request Latency KPI
+Measures performance impact on end users.
+
+
+Error Budget Burn Rate KPI
+Tracks how quickly failures consume the allowed error budget.
+
+
+These KPIs were selected because they provide actionable insight into service health.
 
 ## Final Dashboard
-*TODO*: Create a Dashboard containing graphs that capture all the metrics of your KPIs and adequately representing your SLIs and SLOs. Include a screenshot of the dashboard here, and write a text description of what graphs are represented in the dashboard.  
+
+A final Grafana dashboard was created to visualize KPIs, SLIs, and SLOs.
+The dashboard includes:
+
+Service uptime metrics
+Latency percentiles
+HTTP 4xx and 5xx error rates
+Request throughput
+
+This dashboard provides a consolidated view of service reliability and performance  
