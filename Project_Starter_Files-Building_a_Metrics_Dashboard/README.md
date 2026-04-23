@@ -67,34 +67,29 @@ This dashboard provides visibility into system reliability and performance trend
 
 ## Tracing our Flask App
 
-Tracing was implemented using Jaeger to observe backend request processing.
+Tracing was implemented using Jaeger to observe request processing across services.
 
-Jaeger was successfully deployed and verified at the backend level. The Jaeger query endpoint responds correctly on port `16686`, as validated using the following command:
+Despite initial environment limitations, a custom OTLP (OpenTelemetry Protocol) collector was configured to receive trace data. The Jaeger Query service was exposed and validated on port 16686.
 
-```bash
-curl http://localhost:16686
-``
-Due to limitations of the lab environment, the Jaeger UI frontend does not render in the browser, even though the backend and query services are fully operational and responding correctly with HTTP 200.
-Despite this frontend limitation, the deployment confirms that Jaeger is running correctly and able to receive and process trace data.
-A Python example was used to create a trace and span on the backend to measure request execution time and demonstrate tracing instrumentation.
+Two services (sampleapp1 and sampleapp2) were instrumented to demonstrate distributed tracing, where sampleapp1 initiates a request that is processed by sampleapp2.
 
 ## Jaeger in Dashboards
-Although the Jaeger UI frontend does not render in the lab environment, tracing data can still be correlated with performance metrics.
-The Grafana dashboard includes request latency panels, allowing correlation between observed latency and backend processing behavior that would normally be analyzed through Jaeger traces.
-This approach still provides insight into performance bottlenecks and service behavior.
+Jaeger tracing data was successfully visualized. The distributed traces allow us to identify exactly which service is contributing to latency by looking at the parent-child span relationship.
 
+System Architecture
+The service dependency graph was generated in Jaeger, showing the relationship between sampleapp1 and sampleapp2. This provides a visual map of how requests flow through the system.
 ## Report Error
-TROUBLE TICKET
 Name: Jorge Martínez
-Date: 15 April 2026
-Subject: Backend latency and error rate increase
-Affected Area: Backend Flask Service
-Severity: Medium
-Description:
-During normal operation, increased HTTP 4xx and 5xx error rates were observed, along with higher request latency.
-Metrics indicate that backend request processing time is the main contributor to the latency.
-Tracing and performance metrics allow identification of problematic requests and backend behavior contributing to failures.
 
+Date: 23 April 2026
+
+Subject: Backend latency and error rate increase
+
+Affected Area: Backend Flask Service
+
+Severity: Medium
+
+Description: Increased HTTP 4xx and 5xx error rates were observed. Using Jaeger distributed tracing, we identified that the Main-Call in sampleapp1 is waiting on a Sub-Call in sampleapp2, which is the primary contributor to the observed latency.
 
 ## Creating SLIs and SLOs
 To guarantee a 99.95% monthly uptime SLO, the following SLIs were selected:

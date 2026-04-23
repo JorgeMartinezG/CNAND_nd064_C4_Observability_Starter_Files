@@ -22,7 +22,7 @@ resource = Resource(attributes={
 
 # Set up the tracer provider and add the OTLP exporter
 provider = TracerProvider(resource=resource)
-processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="http://jaeger-collector.observability.svc.cluster.local:4318"))
+processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="http://localhost:4318"))
 provider.add_span_processor(processor)
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
