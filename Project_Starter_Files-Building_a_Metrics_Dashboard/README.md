@@ -10,22 +10,23 @@ The following command was executed:
 ```bash
 kubectl get pods,svc -n monitoring
 
-!
+![Verify Installation](answer-img/01-pods-all.png)
+![Verify Services](answer-img/02-svc-all.png)
 
 ## Setup the Jaeger and Prometheus source
 Grafana was exposed locally using kubectl port-forward on port 3000:
-
+![Grafana Home](answer-img/03-grafana-home.png)
 kubectl port-forward svc/grafana 3000:80 -n monitoring
 
 After logging into Grafana, Prometheus was configured as a data source using the Prometheus service running in the monitoring namespace. The data source configuration was validated successfully, confirming that Grafana can query Prometheus metrics.
-
+![Prometheus Data Source](answer-img/04-prometheus-datasource.png)
 Grafana was exposed using kubectl port-forward on port 3000. After logging into Grafana, Prometheus was configured as a data source using the Prometheus service running in the monitoring namespace. The data source configuration was validated successfully.
 
 ## Create a Basic Dashboard
 A basic Grafana dashboard was created using Prometheus as the data source.
 This dashboard was used to verify that metrics are being collected and displayed correctly.
 The dashboard includes a simple panel querying Prometheus metrics to confirm end‑to‑end connectivity.
-
+![Basic Dashboard](answer-img/05-basic-dashboard.png)
 ## Describe SLO/SLI
 A Service Level Objective (SLO) defines the target reliability or performance that a service is expected to achieve. A Service Level Indicator (SLI) is the actual metric used to measure whether the system meets that objective.
 For a monthly uptime SLO, the SLI is the percentage of time the application is available and responding correctly during the month.
@@ -66,6 +67,7 @@ Request latency
 
 This dashboard provides visibility into system reliability and performance trends.
 
+![SLI Dashboard](answer-img/05-basic-dashboard.png)
 ## Tracing our Flask App
 
 Tracing was implemented using Jaeger to observe request processing across services.
@@ -73,12 +75,13 @@ Tracing was implemented using Jaeger to observe request processing across servic
 Despite initial environment limitations, a custom OTLP (OpenTelemetry Protocol) collector was configured to receive trace data. The Jaeger Query service was exposed and validated on port 16686.
 
 Two services (sampleapp1 and sampleapp2) were instrumented to demonstrate distributed tracing, where sampleapp1 initiates a request that is processed by sampleapp2.
-
+![Jaeger Trace Detail](answer-img/06-trace-detail.png)
 ## Jaeger in Dashboards
 Jaeger tracing data was successfully visualized. The distributed traces allow us to identify exactly which service is contributing to latency by looking at the parent-child span relationship.
 
-System Architecture
+##System Architecture
 The service dependency graph was generated in Jaeger, showing the relationship between sampleapp1 and sampleapp2. This provides a visual map of how requests flow through the system.
+![System Architecture](answer-img/07-architecture.png)
 ## Report Error
 Name: Jorge Martínez
 
@@ -129,3 +132,4 @@ HTTP 4xx and 5xx error rates
 Request throughput
 
 This dashboard provides a consolidated view of service reliability and performance  
+![Final Dashboard](answer-img/05-basic-dashboard.png)
