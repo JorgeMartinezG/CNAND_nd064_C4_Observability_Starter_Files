@@ -10,6 +10,7 @@ The following command was executed:
 ```bash
 kubectl get pods,svc -n monitoring
 
+!
 
 ## Setup the Jaeger and Prometheus source
 Grafana was exposed locally using kubectl port-forward on port 3000:
